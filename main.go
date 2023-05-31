@@ -10,6 +10,11 @@ import (
 	"github.com/joho/godotenv"
 )
 
+type account struct {
+	Name string
+	Age  string
+}
+
 func main() {
 	err := godotenv.Load(".env")
 	if err != nil {
@@ -29,5 +34,23 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("value", val) // "val1"
+	fmt.Println("Get key1:", val) // "val1"
+
+	hSetKey := "account_1"
+	sampleAccount := &account{
+		Name: "kojikoji",
+		Age:  "41",
+	}
+	if err := repo.HSet(ctx, hSetKey, sampleAccount); err != nil {
+		log.Fatal(err)
+	}
+
+	hGetAll, err := repo.HGetAll(ctx, hSetKey)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for key, value := range hGetAll {
+		fmt.Printf("key:%s\nvalue:%s\n", key, value)
+	}
 }
