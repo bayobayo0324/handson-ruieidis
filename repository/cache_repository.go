@@ -13,6 +13,7 @@ type CasheRepository interface {
 	Get(ctx context.Context, key string) (string, error)
 	HSet(ctx context.Context, key string, target interface{}) error
 	HGetAll(ctx context.Context, key string) (map[string]string, error)
+	FlushDB(ctx context.Context) error
 }
 
 type casheRepository struct {
@@ -62,4 +63,8 @@ func (r *casheRepository) HSet(ctx context.Context, key string, target interface
 func (r *casheRepository) HGetAll(ctx context.Context, key string) (map[string]string, error) {
 	result := r.client.Do(ctx, r.client.B().Hgetall().Key(key).Build())
 	return result.AsStrMap()
+}
+
+func (r *casheRepository) FlushDB(ctx context.Context) error {
+	return r.client.Do(ctx, r.client.B().Flushdb().Build()).Error()
 }

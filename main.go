@@ -53,4 +53,8 @@ func main() {
 	for key, value := range hGetAll {
 		fmt.Printf("key:%s\nvalue:%s\n", key, value)
 	}
+
+	if err := repo.FlushDB(ctx); err != nil {
+		log.Fatal(err)
+	}
 }
